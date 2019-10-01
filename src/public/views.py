@@ -98,7 +98,7 @@ def dite():
     from .forms import ValidateChild
     form = ValidateChild()
     form.parent_id.choices = db.session.query(Parent.id,Parent.prijmeni).all()
-    if form.validate_on_submit():
+    if form.is_submitted():
         Child.create(**form.data)
         flash(message="Ulozeno",category="info")
     return render_template("public/child.tmpl", form=form)
@@ -107,7 +107,7 @@ def dite():
 def rodic():
     from .forms import ValidateParent
     form = ValidateParent()
-    if form.validate_on_submit():
+    if form.is_submitted():
         Parent.create(**form.data)
         flash(message="Ulozeno",category="info")
     return render_template("public/parent.tmpl", form=form)
