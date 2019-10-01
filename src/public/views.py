@@ -89,3 +89,25 @@ def chart():
     values = [10, 9, 8, 7, 6, 4, 7, 8]
     return render_template('public/chart.tmpl', values=values, labels=labels, legend=legend)
 
+from flask import flash
+from ..data.models import Parent
+from ..data.models import Child
+
+@blueprint.route('/child',methods=['GET', 'POST'])
+def dite():
+    from .forms import ValidateChild
+    form = ValidateChild()
+    form.parent_id.choices = db.session.query(Parent.id,Parent.prijmeni).all()
+    if form.validate_on_submit():
+        Child.create(**form.data)
+        flash(message="Ulozeno",category="info")
+    return render_template("public/child.tmpl", form=form)
+
+@blueprint.route('/parent',methods=['GET', 'POST'])
+def rodic():
+    from .forms import ValidateParent
+    form = ValidateParent()
+    if form.validate_on_submit():
+        Parent.create(**form.data)
+        flash(message="Ulozeno",category="info")
+    return render_template("public/parent.tmpl", form=form)
